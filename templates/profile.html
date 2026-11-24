@@ -1,0 +1,648 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile | FUTA Meet</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="futa-meet-body">
+
+    <div class="website-layout">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <a href="{{ url_for('dashboard') }}" class="brand">
+
+                <img
+                    src="{{ url_for('static', filename='images/futa-meet-logo.png') }}"
+                    alt="FUTA Meet Logo"
+                >
+
+            </a>
+
+
+            <nav class="sidebar-navigation">
+
+                <a href="{{ url_for('dashboard') }}" class="sidebar-link">
+                    <span>⌂</span>
+                    <span>Home</span>
+                </a>
+
+                <a href="{{ url_for('discover') }}" class="sidebar-link">
+                    <span>◉</span>
+                    <span>Discover</span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <span>⌂</span>
+                    <span>Accommodation</span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <span>▣</span>
+                    <span>Food Delivery</span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <span>▤</span>
+                    <span>Campus Market</span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <span>▢</span>
+                    <span>Chat</span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <span>▤</span>
+                    <span>Academics</span>
+                </a>
+
+                <a href="{{ url_for('profile') }}"
+                   class="sidebar-link active">
+
+                    <span>◯</span>
+                    <span>Profile</span>
+
+                </a>
+
+            </nav>
+
+
+            <!-- USER SUMMARY -->
+
+            <div class="sidebar-user">
+
+                <div class="user-avatar">
+                    {{ user["full_name"][0] | upper }}
+                </div>
+
+                <div>
+                    <strong>{{ user["full_name"] }}</strong>
+                    <small>Student account</small>
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+
+        <main class="main-content">
+
+            <!-- TOP BAR -->
+
+            <header class="topbar">
+
+                <div class="mobile-brand">
+                    FUTA Meet
+                </div>
+
+
+                <div class="search-box">
+
+                    <span>⌕</span>
+
+                    <input
+                        type="search"
+                        placeholder="Search students, courses, houses..."
+                        aria-label="Search FUTA Meet"
+                    >
+
+                </div>
+
+
+                <div class="topbar-actions">
+
+                    <button type="button"
+                            class="icon-button"
+                            aria-label="Notifications">
+
+                        ♧
+
+                    </button>
+
+
+                    <button type="button"
+                            class="icon-button"
+                            aria-label="Messages">
+
+                        ◯
+
+                    </button>
+
+
+                    <a href="{{ url_for('create_post') }}"
+                       class="create-button">
+
+                        + Create
+
+                    </a>
+
+                </div>
+
+            </header>
+
+
+            <!-- PROFILE HEADER -->
+
+            <section class="profile-hero">
+
+                <div class="profile-hero-picture">
+
+                    {% if user.profile_picture %}
+
+                        <img
+                            src="{{ url_for('static', filename='uploads/' + user.profile_picture.split('/')[-1]) }}"
+                            alt="Profile picture"
+                        >
+
+                    {% else %}
+
+                        <div class="profile-initial">
+                            {{ user["full_name"][0] | upper }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="profile-hero-details">
+
+                    <span class="section-label">
+                        STUDENT PROFILE
+                    </span>
+
+
+                    <h1>
+                        {{ user["full_name"] }}
+                    </h1>
+
+
+                    <p class="profile-meta">
+
+                        {% if user.department %}
+                            {{ user.department }}
+                        {% else %}
+                            Department not added
+                        {% endif %}
+
+                        {% if user.level %}
+                            · {{ user.level }}
+                        {% endif %}
+
+                    </p>
+
+
+                    {% if user.bio %}
+
+                        <p class="profile-bio">
+                            {{ user.bio }}
+                        </p>
+
+                    {% else %}
+
+                        <p class="profile-bio">
+                            Welcome to my FUTA Meet profile.
+                        </p>
+
+                    {% endif %}
+
+
+                    <div class="profile-actions">
+
+                        <a href="#edit-profile"
+                           class="profile-action-button">
+
+                            Edit Profile
+
+                        </a>
+
+
+                        <a href="{{ url_for('create_post') }}"
+                           class="profile-action-button secondary">
+
+                            Create Post
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- PROFILE CONTENT -->
+
+            <section class="profile-content">
+
+                <!-- EDIT PROFILE -->
+
+                <div class="profile-panel" id="edit-profile">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <span class="section-label">
+                                ACCOUNT SETTINGS
+                            </span>
+
+                            <h2>
+                                Edit your profile
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <form method="POST"
+                          enctype="multipart/form-data"
+                          class="profile-form">
+
+                        <div class="profile-form-grid">
+
+                            <div class="form-field">
+
+                                <label for="department">
+                                    Department
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="department"
+                                    name="department"
+                                    value="{{ user.department or '' }}"
+                                    placeholder="e.g. Biomedical Engineering"
+                                >
+
+                            </div>
+
+
+                            <div class="form-field">
+
+                                <label for="level">
+                                    Level
+                                </label>
+
+                                <select id="level" name="level">
+
+                                    <option value="">
+                                        Select Level
+                                    </option>
+
+                                    {% for option in ['100L', '200L', '300L', '400L', '500L', 'Postgraduate'] %}
+
+                                        <option value="{{ option }}"
+                                            {% if user.level == option %}selected{% endif %}>
+
+                                            {{ option }}
+
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-field">
+
+                            <label for="bio">
+                                About Me
+                            </label>
+
+                            <textarea
+                                id="bio"
+                                name="bio"
+                                rows="4"
+                                placeholder="Tell people a little about yourself"
+                            >{{ user.bio or '' }}</textarea>
+
+                        </div>
+
+
+                        <div class="form-field">
+
+                            <label for="profile_picture">
+                                Profile Picture
+                            </label>
+
+                            <input
+                                type="file"
+                                id="profile_picture"
+                                name="profile_picture"
+                                accept="image/*"
+                            >
+
+                        </div>
+
+
+                        <label class="visibility-option">
+
+                            <input
+                                type="checkbox"
+                                name="profile_visible"
+                                {% if user.profile_visible %}checked{% endif %}
+                            >
+
+                            Make my profile visible to other users
+
+                        </label>
+
+
+                        <button type="submit"
+                                class="save-profile-button">
+
+                            Save Profile
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <!-- MY POSTS -->
+
+                <div class="profile-panel">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <span class="section-label">
+                                YOUR ACTIVITY
+                            </span>
+
+                            <h2>
+                                My Posts
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if posts %}
+
+                        <div class="profile-posts">
+
+                            {% for post in posts %}
+
+                                <article class="social-post">
+
+                                    <div class="social-post-header">
+
+                                        {% if post.profile_picture %}
+
+                                            <img
+                                                src="{{ url_for('static', filename='uploads/' + post.profile_picture.split('/')[-1]) }}"
+                                                alt="Profile picture"
+                                                class="social-post-avatar"
+                                            >
+
+                                        {% else %}
+
+                                            <div class="social-post-avatar post-initial">
+                                                {{ post.full_name[0] | upper }}
+                                            </div>
+
+                                        {% endif %}
+
+
+                                        <div class="social-post-author">
+
+                                            <strong>
+                                                {{ post.full_name }}
+                                            </strong>
+
+                                            <small>
+                                                {{ post.created_at }}
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    {% if post.content %}
+
+                                        <p class="social-post-content">
+                                            {{ post.content }}
+                                        </p>
+
+                                    {% endif %}
+
+
+                                    {% if post.media_filename %}
+
+                                        {% if post.media_type == "image" %}
+
+                                            <img
+                                                src="{{ url_for('static', filename='uploads/' + post.media_filename) }}"
+                                                alt="Post media"
+                                                class="social-post-media"
+                                            >
+
+                                        {% elif post.media_type == "video" %}
+
+                                            <video
+                                                class="social-post-media"
+                                                controls
+                                                preload="metadata"
+                                            >
+
+                                                <source
+                                                    src="{{ url_for('static', filename='uploads/' + post.media_filename) }}"
+                                                >
+
+                                                Your browser does not support video playback.
+
+                                            </video>
+
+                                        {% endif %}
+
+                                    {% endif %}
+
+
+                                   
+<div class="social-post-footer">
+
+    <form
+        action="{{ url_for('like_post', post_id=post.id) }}"
+        method="POST"
+        class="post-action-form">
+
+        <button
+    type="submit"
+    class="post-action-button {% if post.user_liked %}liked{% endif %}"
+    aria-label="Like post">
+
+    {% if post.user_liked %}
+        ❤️
+    {% else %}
+        ♡
+    {% endif %}
+
+    <span>
+        {{ post.like_count }}
+    </span>
+
+</button>
+
+    </form>
+
+    <button type="button" class="post-action-button">
+        ◯ Comment
+    </button>
+
+    <button type="button" class="post-action-button">
+        ↗ Share
+    </button>
+
+</div>
+
+                                    </div>
+
+                                </article>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="empty-profile-posts">
+
+                            <div class="empty-post-icon">
+                                ✦
+                            </div>
+
+                            <h3>
+                                No posts yet
+                            </h3>
+
+                            <p>
+                                Share something with your campus community.
+                            </p>
+
+
+                            <a href="{{ url_for('create_post') }}"
+                               class="create-button">
+
+                                + Create Your First Post
+
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+
+            <!-- LOGOUT -->
+
+            <div class="dashboard-footer">
+
+                <a href="{{ url_for('logout') }}">
+                    Log out
+                </a>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- MOBILE NAVIGATION -->
+
+    <nav class="mobile-navigation">
+
+        <a href="{{ url_for('dashboard') }}"
+           class="mobile-nav-link">
+
+            <span>⌂</span>
+            <small>Home</small>
+
+        </a>
+
+
+        <a href="{{ url_for('discover') }}"
+           class="mobile-nav-link">
+
+            <span>◉</span>
+            <small>Discover</small>
+
+        </a>
+
+
+        <a href="#"
+           class="mobile-nav-link">
+
+            <span>▢</span>
+            <small>Chat</small>
+
+        </a>
+
+
+        <a href="{{ url_for('profile') }}"
+           class="mobile-nav-link active">
+
+            <span>◯</span>
+            <small>Profile</small>
+
+        </a>
+
+    </nav>
+
+
+    <!-- FLASH MESSAGE ANIMATION -->
+
+    <script>
+
+        setTimeout(function () {
+
+            const messages =
+                document.querySelectorAll(".flash-message");
+
+            messages.forEach(function (message) {
+
+                message.style.opacity = "0";
+                message.style.transform = "translateY(-10px)";
+                message.style.transition =
+                    "opacity 0.3s ease, transform 0.3s ease";
+
+                setTimeout(function () {
+                    message.remove();
+                }, 300);
+
+            });
+
+        }, 2000);
+
+    </script>
+
+</body>
+
+</html>

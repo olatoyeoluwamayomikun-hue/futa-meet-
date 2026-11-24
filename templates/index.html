@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FUTA Meet</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+
+        <div class="logo">
+            FUTA <span>Meet</span>
+        </div>
+
+        <nav>
+            <a href="/">Home</a>
+            <a href="#">Discover</a>
+            <a href="#">Groups</a>
+            <a href="#">Messages</a>
+        </nav>
+
+<div class="auth-actions">
+
+    <a href="{{ url_for('register') }}" class="auth-button">
+        Create Account
+    </a>
+
+    <a href="{{ url_for('login') }}" class="login-btn">
+        Login
+    </a>
+
+</div>
+
+</div>
+    </header>
+
+
+    <!-- Main Content -->
+    <main class="container">
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <p class="tagline">CONNECT • DISCOVER • BELONG</p>
+
+                <h1>
+                    Meet people.
+                    <br>
+                    Build connections.
+                </h1>
+
+                <p>
+                    Welcome to FUTA Meet, a community where
+                    students connect, share ideas, make friends,
+                    and discover new opportunities.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <button class="primary-btn">
+                        Get Started
+                    </button>
+
+                    <button class="secondary-btn">
+                        Explore Community
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Features -->
+        <section class="features">
+
+            <h2>What can you do on FUTA Meet?</h2>
+
+            <div class="feature-grid">
+
+                <div class="feature-card">
+
+                    <h3>💬 Chat</h3>
+
+                    <p>
+                        Connect and communicate with other students.
+                    </p>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <h3>🌍 Discover</h3>
+
+                    <p>
+                        Meet people from different departments
+                        and backgrounds.
+                    </p>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <h3>👥 Communities</h3>
+
+                    <p>
+                        Join groups based on your interests,
+                        courses, and hobbies.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Community Feed -->
+        <section class="community">
+
+            <h2>Community Feed</h2>
+
+            <div class="empty-feed">
+
+                <p>
+                    Your community posts will appear here.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <p>© 2026 FUTA Meet. Connect with your community.</p>
+
+    </footer>
+
+</body>
+
+</html>

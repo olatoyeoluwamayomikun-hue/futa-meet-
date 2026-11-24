@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ user["full_name"] }} | FUTA Meet</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        /* ==============================
+           FUTA MEET PROFILE PAGE
+           ============================== */
+
+        .fm-profile-page *,
+        .fm-profile-page *::before,
+        .fm-profile-page *::after {
+            box-sizing: border-box;
+        }
+
+        .fm-profile-page {
+            width: 100%;
+            min-height: calc(100vh - 70px);
+            background: #f5f7fb;
+            padding: 35px 20px 70px;
+        }
+
+        .fm-profile-wrapper {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+
+        /* ==============================
+           PROFILE MAIN CARD
+           ============================== */
+
+        .fm-profile-card {
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 35px rgba(15, 23, 42, 0.08);
+        }
+
+
+        /* ==============================
+           COVER
+           ============================== */
+
+        .fm-cover {
+            width: 100%;
+            height: 220px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #123b82 0%,
+                    #1769e0 50%,
+                    #5aa1ff 100%
+                );
+
+            position: relative;
+        }
+
+        .fm-cover-pattern {
+            position: absolute;
+            inset: 0;
+
+            background-image:
+                radial-gradient(
+                    rgba(255,255,255,0.14) 1px,
+                    transparent 1px
+                );
+
+            background-size: 24px 24px;
+        }
+
+
+        /* ==============================
+           PROFILE HEADER
+           ============================== */
+
+        .fm-profile-header {
+            position: relative;
+            padding: 0 55px 35px;
+        }
+
+
+        /* ==============================
+           AVATAR
+           ============================== */
+
+        .fm-avatar-wrapper {
+            display: flex;
+            justify-content: center;
+
+            margin-top: -75px;
+
+            position: relative;
+            z-index: 5;
+        }
+
+        .fm-avatar {
+
+            width: 150px;
+            height: 150px;
+
+            border-radius: 50%;
+
+            object-fit: cover;
+
+            border: 7px solid #ffffff;
+
+            background: #dbeafe;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .fm-avatar-placeholder {
+
+            width: 150px;
+            height: 150px;
+
+            border-radius: 50%;
+
+            border: 7px solid #ffffff;
+
+            background: #dbeafe;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #174ea6;
+
+            font-size: 52px;
+            font-weight: 800;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.15);
+        }
+
+
+        /* ==============================
+           NAME
+           ============================== */
+
+        .fm-profile-name {
+            text-align: center;
+
+            margin: 15px 0 5px;
+
+            font-size: 30px;
+            line-height: 1.2;
+
+            color: #111827;
+
+            font-weight: 800;
+        }
+
+        .fm-profile-subtitle {
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 14px;
+
+            margin: 0;
+        }
+
+
+        /* ==============================
+           FOLLOW BUTTON
+           ============================== */
+
+        .fm-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+
+            margin-top: 22px;
+        }
+
+        .fm-follow-btn {
+
+            min-width: 150px;
+
+            border: none;
+
+            padding: 12px 28px;
+
+            border-radius: 9px;
+
+            background: #1769e0;
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .fm-follow-btn:hover {
+            background: #1258c2;
+            transform: translateY(-1px);
+        }
+
+        .fm-follow-btn.following {
+
+            background: #e8eef8;
+
+            color: #174ea6;
+        }
+
+        .fm-follow-btn:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .fm-follow-message {
+            text-align: center;
+
+            margin-top: 8px;
+
+            color: #dc2626;
+
+            font-size: 13px;
+        }
+
+
+        /* ==============================
+           STATS
+           ============================== */
+
+        .fm-stats {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 70px;
+
+            margin-top: 30px;
+
+            padding-top: 25px;
+
+            border-top: 1px solid #edf0f4;
+        }
+
+        .fm-stat {
+            text-align: center;
+            min-width: 90px;
+        }
+
+        .fm-stat-number {
+
+            display: block;
+
+            font-size: 22px;
+
+            font-weight: 800;
+
+            color: #111827;
+        }
+
+        .fm-stat-label {
+
+            display: block;
+
+            margin-top: 4px;
+
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+
+        /* ==============================
+           PROFILE NAVIGATION
+           ============================== */
+
+        .fm-profile-nav {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 40px;
+
+            margin-top: 30px;
+
+            border-top: 1px solid #edf0f4;
+
+            border-bottom: 1px solid #edf0f4;
+        }
+
+        .fm-profile-nav span {
+
+            padding: 17px 5px;
+
+            color: #1769e0;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            border-bottom: 3px solid #1769e0;
+        }
+
+
+        /* ==============================
+           LOWER INFORMATION AREA
+           ============================== */
+
+        .fm-profile-body {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 20px;
+
+            padding: 25px 0 0;
+        }
+
+        .fm-info-card {
+
+            background: #f8fafc;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 14px;
+
+            padding: 22px;
+        }
+
+        .fm-info-title {
+
+            margin: 0 0 17px;
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+            color: #111827;
+        }
+
+        .fm-info-row {
+
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 15px;
+
+            padding: 13px 0;
+
+            border-bottom: 1px solid #e8edf3;
+        }
+
+        .fm-info-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .fm-info-icon {
+
+            width: 34px;
+            height: 34px;
+
+            border-radius: 9px;
+
+            background: #e8f1ff;
+
+            color: #1769e0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 15px;
+
+            flex-shrink: 0;
+        }
+
+        .fm-info-label {
+
+            display: block;
+
+            color: #64748b;
+
+            font-size: 12px;
+
+            margin-bottom: 3px;
+        }
+
+        .fm-info-value {
+
+            display: block;
+
+            color: #1e293b;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+        .fm-about-text {
+
+            color: #475569;
+
+            font-size: 14px;
+
+            line-height: 1.7;
+
+            margin: 0;
+        }
+
+
+        /* ==============================
+           PROFILE FOOTER
+           ============================== */
+
+        .fm-profile-footer {
+
+            text-align: center;
+
+            padding-top: 25px;
+        }
+
+        .fm-dashboard-link {
+
+            display: inline-block;
+
+            text-decoration: none;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+        .fm-dashboard-link:hover {
+            color: #1769e0;
+        }
+
+
+        /* ==============================
+           MOBILE
+           ============================== */
+
+        @media (max-width: 700px) {
+
+            .fm-profile-page {
+                padding: 15px 10px 80px;
+            }
+
+            .fm-cover {
+                height: 170px;
+            }
+
+            .fm-profile-header {
+                padding: 0 20px 28px;
+            }
+
+            .fm-avatar,
+            .fm-avatar-placeholder {
+                width: 120px;
+                height: 120px;
+            }
+
+            .fm-avatar-placeholder {
+                font-size: 42px;
+            }
+
+            .fm-avatar-wrapper {
+                margin-top: -60px;
+            }
+
+            .fm-profile-name {
+                font-size: 24px;
+            }
+
+            .fm-stats {
+                gap: 45px;
+            }
+
+            .fm-profile-body {
+                grid-template-columns: 1fr;
+            }
+
+            .fm-profile-nav {
+                gap: 25px;
+            }
+
+        }
+
+
+        @media (max-width: 430px) {
+
+            .fm-cover {
+                height: 145px;
+            }
+
+            .fm-profile-name {
+                font-size: 21px;
+            }
+
+            .fm-stats {
+                gap: 30px;
+            }
+
+            .fm-stat-number {
+                font-size: 19px;
+            }
+
+            .fm-profile-nav {
+                gap: 18px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- ==============================
+     PROFILE PAGE
+     ============================== -->
+
+<main class="fm-profile-page">
+
+    <div class="fm-profile-wrapper">
+
+
+        <section class="fm-profile-card">
+
+
+            <!-- COVER -->
+
+            <div class="fm-cover">
+
+                <div class="fm-cover-pattern"></div>
+
+            </div>
+
+
+            <!-- PROFILE HEADER -->
+
+            <div class="fm-profile-header">
+
+
+                <!-- AVATAR -->
+
+                <div class="fm-avatar-wrapper">
+
+                    {% if user["profile_picture"] %}
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='uploads/' + user['profile_picture']
+                            ) }}"
+                            alt="Profile picture"
+                            class="fm-avatar"
+                        >
+
+                    {% else %}
+
+                        <div class="fm-avatar-placeholder">
+
+                            {{ user["full_name"][0]|upper }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- NAME -->
+
+                <h1 class="fm-profile-name">
+
+                    {{ user["full_name"] }}
+
+                </h1>
+
+
+                <p class="fm-profile-subtitle">
+
+                    {{ user["department"] }}
+                    •
+                    {{ user["level"] }}
+
+                </p>
+
+
+                <!-- ACTION -->
+
+                {% if current_user and current_user["id"] != user["id"] %}
+
+                    <div class="fm-actions">
+
+                        <button
+                            id="follow-btn"
+                            class="fm-follow-btn {% if is_following %}following{% endif %}"
+                            data-user-id="{{ user['id'] }}"
+                        >
+
+                            {% if is_following %}
+                                Following
+                            {% else %}
+                                Follow
+                            {% endif %}
+
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="follow-message"
+                        class="fm-follow-message"
+                    ></div>
+
+                {% endif %}
+
+
+                <!-- STATS -->
+
+                <div class="fm-stats">
+
+                    <div class="fm-stat">
+
+                        <span
+                            class="fm-stat-number"
+                            id="follower-count"
+                        >
+                            {{ follower_count }}
+                        </span>
+
+                        <span class="fm-stat-label">
+                            Followers
+                        </span>
+
+                    </div>
+
+
+                    <div class="fm-stat">
+
+                        <span class="fm-stat-number">
+                            {{ following_count }}
+                        </span>
+
+                        <span class="fm-stat-label">
+                            Following
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PROFILE NAV -->
+
+                <div class="fm-profile-nav">
+
+                    <span>
+                        About
+                    </span>
+
+                    <span>
+                        Posts
+                    </span>
+
+                </div>
+
+
+                <!-- INFORMATION -->
+
+                <div class="fm-profile-body">
+
+
+                    <!-- ABOUT -->
+
+                    <div class="fm-info-card">
+
+                        <h2 class="fm-info-title">
+                            About
+                        </h2>
+
+
+                        {% if user["bio"] %}
+
+                            <p class="fm-about-text">
+                                {{ user["bio"] }}
+                            </p>
+
+                        {% else %}
+
+                            <p class="fm-about-text">
+                                This student hasn't added a bio yet.
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- STUDENT INFORMATION -->
+
+                    <div class="fm-info-card">
+
+                        <h2 class="fm-info-title">
+                            Student information
+                        </h2>
+
+
+                        <div class="fm-info-row">
+
+                            <div class="fm-info-icon">
+                                🎓
+                            </div>
+
+                            <div>
+
+                                <span class="fm-info-label">
+                                    Department
+                                </span>
+
+                                <span class="fm-info-value">
+                                    {{ user["department"] }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="fm-info-row">
+
+                            <div class="fm-info-icon">
+                                📚
+                            </div>
+
+                            <div>
+
+                                <span class="fm-info-label">
+                                    Level
+                                </span>
+
+                                <span class="fm-info-value">
+                                    {{ user["level"] }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FOOTER -->
+
+                <div class="fm-profile-footer">
+
+                    <a
+                        href="{{ url_for('dashboard') }}"
+                        class="fm-dashboard-link"
+                    >
+                        ← Back to FUTA Meet
+                    </a>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+<!-- ==============================
+     FOLLOW JAVASCRIPT
+     ============================== -->
+
+<script>
+
+const followButton =
+    document.getElementById("follow-btn");
+
+const followerCount =
+    document.getElementById("follower-count");
+
+const followMessage =
+    document.getElementById("follow-message");
+
+
+if (followButton) {
+
+    followButton.addEventListener(
+        "click",
+        async function () {
+
+            const userId =
+                followButton.dataset.userId;
+
+            followButton.disabled = true;
+
+            if (followMessage) {
+                followMessage.textContent = "";
+            }
+
+
+            try {
+
+                const response = await fetch(
+                    `/follow/${userId}`,
+                    {
+                        method: "POST"
+                    }
+                );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!data.success) {
+
+                    if (followMessage) {
+
+                        followMessage.textContent =
+                            data.message ||
+                            "Something went wrong.";
+
+                    }
+
+                    followButton.disabled = false;
+
+                    return;
+                }
+
+
+                /* UPDATE FOLLOWER COUNT */
+
+                followerCount.textContent =
+                    data.follower_count;
+
+
+                /* UPDATE BUTTON */
+
+                if (data.following) {
+
+                    followButton.textContent =
+                        "Following";
+
+                    followButton.classList.add(
+                        "following"
+                    );
+
+                } else {
+
+                    followButton.textContent =
+                        "Follow";
+
+                    followButton.classList.remove(
+                        "following"
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                if (followMessage) {
+
+                    followMessage.textContent =
+                        "Could not update follow status.";
+
+                }
+
+            }
+
+
+            followButton.disabled = false;
+
+        }
+    );
+
+}
+
+</script>
+
+</body>
+</html>

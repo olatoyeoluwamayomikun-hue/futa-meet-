@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>FUTA Meet | Dashboard</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+    /* Campus Feed */
+
+    .campus-feed-section {
+        margin-top: 32px;
+    }
+
+    .campus-feed-section .section-heading p {
+        color: #64748b;
+        margin-top: 6px;
+    }
+
+    .social-post {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .social-post-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .post-author {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .post-author-image,
+    .post-author-placeholder {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .post-author-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #eaf0ff;
+        color: #155eef;
+        font-weight: 700;
+    }
+
+    .post-author strong {
+        display: block;
+        color: #0f172a;
+        font-size: 14px;
+    }
+
+    .post-author small {
+        display: block;
+        color: #64748b;
+        font-size: 11px;
+        margin-top: 4px;
+    }
+
+    .social-post-content {
+        margin: 20px 0;
+        color: #1e293b;
+        line-height: 1.7;
+        white-space: pre-wrap;
+    }
+
+    .post-media {
+        display: block;
+        width: 100%;
+        max-height: 550px;
+        object-fit: contain;
+        border-radius: 12px;
+        margin: 15px 0;
+        background: #f8fafc;
+    }
+
+    .social-post-footer {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 12px;
+        margin-top: 16px;
+    }
+
+    .post-action-form {
+        margin: 0;
+    }
+
+    .post-action-button {
+        border: none;
+        background: transparent;
+        color: #64748b;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 25px;
+        padding: 5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .post-action-button span {
+        font-size: 13px;
+    }
+
+    .post-action-button:hover {
+        color: #e0245e;
+    }
+
+    .post-action-button.liked {
+        color: #e0245e;
+    }
+
+    .post-action-button:disabled {
+        cursor: wait;
+        opacity: 0.6;
+    }
+
+    /* Comments */
+
+    .comment-section {
+        display: none;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .comment-section.open {
+        display: block;
+    }
+
+    .comments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .comment-item {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-size: 13px;
+        color: #334155;
+    }
+
+    .comment-item strong {
+        display: block;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+
+    .comment-form {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .comment-form input {
+        flex: 1;
+        min-width: 0;
+        border: 1px solid #cbd5e1;
+        border-radius: 22px;
+        padding: 11px 15px;
+        outline: none;
+        font-family: inherit;
+    }
+
+    .comment-form input:focus {
+        border-color: #2563eb;
+    }
+
+    .comment-form button {
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        background: #2563eb;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .comment-form button:disabled {
+        opacity: 0.6;
+        cursor: wait;
+    }
+
+    .comment-feedback {
+        color: #dc2626;
+        font-size: 12px;
+        margin-top: 8px;
+    }
+
+    .empty-state {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 25px;
+        text-align: center;
+        color: #64748b;
+    }
+
+    /* Mobile navigation */
+
+    .mobile-navigation {
+        z-index: 9999;
+    }
+
+    .mobile-nav-link {
+        text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+
+        .social-post {
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .social-post-footer {
+            gap: 15px;
+        }
+
+        .post-action-button {
+            font-size: 22px;
+        }
+
+    }
+</style>
+```
+
+</head>
+
+<body class="futa-meet-body">
+
+```
+<div class="website-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <a href="{{ url_for('dashboard') }}" class="brand">
+            <img
+                src="{{ url_for('static', filename='images/futa-meet-logo.png') }}"
+                alt="FUTA Meet Logo"
+            >
+        </a>
+
+
+        <!-- SIDEBAR NAVIGATION -->
+        <nav class="sidebar-navigation">
+
+            <a href="{{ url_for('dashboard') }}"
+               class="sidebar-link active">
+                <span>⌂</span>
+                <span>Home</span>
+            </a>
+
+
+            <a href="{{ url_for('notifications') }}"
+               class="sidebar-link">
+                <span>♧</span>
+                <span>Notifications</span>
+            </a>
+
+
+            <a href="{{ url_for('discover') }}"
+               class="sidebar-link">
+                <span>◉</span>
+                <span>Discover</span>
+            </a>
+
+
+            <!-- BUSINESS FIXED -->
+            <a href="{{ url_for('business_my') }}"
+               class="sidebar-link">
+                <span>🏪</span>
+                <span>Business</span>
+            </a>
+
+
+            <a href="#"
+               class="sidebar-link">
+                <span>⌂</span>
+                <span>Accommodation</span>
+            </a>
+
+
+            <a href="#"
+               class="sidebar-link">
+                <span>▣</span>
+                <span>Food Delivery</span>
+            </a>
+
+
+            <a href="#"
+               class="sidebar-link">
+                <span>▤</span>
+                <span>Campus Market</span>
+            </a>
+
+
+            <!-- CHAT -->
+            <a href="{{ url_for('chat') }}"
+               class="sidebar-link">
+                <span>□</span>
+                <span>Chat</span>
+            </a>
+
+
+            <a href="#"
+               class="sidebar-link">
+                <span>▤</span>
+                <span>Academics</span>
+            </a>
+
+
+            <a href="{{ url_for('profile') }}"
+               class="sidebar-link">
+                <span>◯</span>
+                <span>Profile</span>
+            </a>
+
+        </nav>
+
+
+        <!-- USER SUMMARY -->
+        <div class="sidebar-user">
+
+            <div class="user-avatar">
+                {{ user["full_name"][0] | upper }}
+            </div>
+
+            <div>
+                <strong>{{ user["full_name"] }}</strong>
+                <small>Student account</small>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- FLASH MESSAGES -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="flash-messages">
+
+                    {% for category, message in messages %}
+
+                        <div class="flash-message {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+
+            <div class="mobile-brand">
+                FUTA Meet
+            </div>
+
+
+            <div class="search-box">
+
+                <span>⌕</span>
+
+                <input
+                    type="search"
+                    placeholder="Search students, courses, houses..."
+                    aria-label="Search FUTA Meet"
+                >
+
+            </div>
+
+
+            <div class="topbar-actions">
+
+                <a
+                    href="{{ url_for('notifications') }}"
+                    class="icon-button"
+                    aria-label="Notifications">
+                    ♧
+                </a>
+
+
+                <!-- TOPBAR CHAT -->
+                <a
+                    href="{{ url_for('chat') }}"
+                    class="icon-button"
+                    aria-label="Messages">
+                    ◯
+                </a>
+
+
+                <a
+                    href="{{ url_for('create_post') }}"
+                    class="create-button">
+                    + Create
+                </a>
+
+            </div>
+
+        </header>
+
+
+        <!-- WELCOME SECTION -->
+        <section class="welcome-banner">
+
+            <div class="welcome-content">
+
+                <span class="welcome-label">
+                    WELCOME TO YOUR CAMPUS NETWORK
+                </span>
+
+                <h1>
+                    Meet. Connect.<br>
+                    Grow at FUTA.
+                </h1>
+
+                <p>
+                    A student-first space to discover people,
+                    share useful information, find accommodation,
+                    study together and stay connected.
+                </p>
+
+                <a href="{{ url_for('discover') }}"
+                   class="welcome-button">
+                    Explore FUTA Meet →
+                </a>
+
+            </div>
+
+            <div class="welcome-decoration">
+                ✦
+            </div>
+
+        </section>
+
+
+        <!-- CAMPUS FEED -->
+        <section class="dashboard-section campus-feed-section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        YOUR FUTA MEET
+                    </span>
+
+                    <h2>
+                        Campus Feed
+                    </h2>
+
+                    <p>
+                        See what students are sharing.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if posts %}
+
+                {% for post in posts %}
+
+                    <article
+                        class="social-post"
+                        id="post-{{ post.id }}"
+                    >
+
+                        <!-- POST HEADER -->
+                        <div class="social-post-header">
+
+                            <div class="post-author">
+
+                                {% if post.profile_picture %}
+
+                                    <img
+                                        src="{{ url_for(
+                                            'static',
+                                            filename='uploads/' + post.profile_picture
+                                        ) }}"
+                                        alt="{{ post.full_name }}"
+                                        class="post-author-image"
+                                    >
+
+                                {% else %}
+
+                                    <div class="post-author-placeholder">
+                                        {{ post.full_name[0] | upper }}
+                                    </div>
+
+                                {% endif %}
+
+
+                                <div>
+
+                                    <strong>
+                                        {{ post.full_name }}
+                                    </strong>
+
+                                    <small>
+                                        {{ post.created_at }}
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- POST CONTENT -->
+                        {% if post.content %}
+
+                            <div class="social-post-content">
+                                {{ post.content }}
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- POST MEDIA -->
+                        {% if post.media_filename %}
+
+                            {% if post.media_type == "image" %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'static',
+                                        filename='uploads/' + post.media_filename
+                                    ) }}"
+                                    alt="Post image"
+                                    class="post-media"
+                                >
+
+                            {% elif post.media_type == "video" %}
+
+                                <video
+                                    controls
+                                    class="post-media"
+                                >
+
+                                    <source
+                                        src="{{ url_for(
+                                            'static',
+                                            filename='uploads/' + post.media_filename
+                                        ) }}"
+                                    >
+
+                                    Your browser does not support
+                                    video playback.
+
+                                </video>
+
+                            {% endif %}
+
+                        {% endif %}
+
+
+                        <!-- POST ACTIONS -->
+                        <div class="social-post-footer">
+
+
+                            <!-- LIKE -->
+                            <form
+                                action="{{ url_for(
+                                    'like_post',
+                                    post_id=post.id
+                                ) }}"
+                                method="POST"
+                                class="post-action-form"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="post-action-button like-button
+                                    {% if post.user_liked %}liked{% endif %}"
+                                    aria-label="Like post"
+                                >
+
+                                    <span class="like-icon">
+
+                                        {% if post.user_liked %}
+                                            ❤️
+                                        {% else %}
+                                            ♡
+                                        {% endif %}
+
+                                    </span>
+
+                                    <span class="like-count">
+                                        {{ post.like_count }}
+                                    </span>
+
+                                </button>
+
+                            </form>
+
+
+                            <!-- COMMENT -->
+                            <button
+                                type="button"
+                                class="post-action-button comment-trigger"
+                                data-post-id="{{ post.id }}"
+                                aria-label="Comment on post"
+                            >
+                                ◯
+                            </button>
+
+
+                            <!-- SHARE -->
+                            <button
+                                type="button"
+                                class="post-action-button share-button"
+                                data-post-id="{{ post.id }}"
+                                aria-label="Share post"
+                            >
+                                ↗
+                            </button>
+
+                        </div>
+
+
+                        <!-- COMMENT SECTION -->
+                        <div
+                            class="comment-section"
+                            id="comments-{{ post.id }}"
+                        >
+
+                            <div class="comments-list"></div>
+
+
+                            <form
+                                class="comment-form"
+                                action="{{ url_for(
+                                    'add_comment',
+                                    post_id=post.id
+                                ) }}"
+                                method="POST"
+                            >
+
+                                <input
+                                    type="text"
+                                    name="content"
+                                    placeholder="Write a comment..."
+                                    maxlength="500"
+                                    autocomplete="off"
+                                    required
+                                >
+
+
+                                <button
+                                    type="submit"
+                                    aria-label="Send comment"
+                                >
+                                    ➤
+                                </button>
+
+                            </form>
+
+
+                            <div class="comment-feedback"></div>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <p>
+                        No posts yet.
+                        Be the first to share something!
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- LOGOUT -->
+        <div class="dashboard-footer">
+
+            <a href="{{ url_for('logout') }}">
+                Log out
+            </a>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- MOBILE NAVIGATION -->
+<nav class="mobile-navigation">
+
+    <a
+        href="{{ url_for('dashboard') }}"
+        class="mobile-nav-link active"
+    >
+        <span>⌂</span>
+        <small>Home</small>
+    </a>
+
+
+    <a
+        href="{{ url_for('discover') }}"
+        class="mobile-nav-link"
+    >
+        <span>◉</span>
+        <small>Discover</small>
+    </a>
+
+
+    <!-- PHONE CHAT FIX -->
+    <a
+        href="{{ url_for('chat') }}"
+        class="mobile-nav-link"
+        aria-label="Open Chat"
+    >
+        <span>□</span>
+        <small>Chat</small>
+    </a>
+
+
+    <a
+        href="{{ url_for('profile') }}"
+        class="mobile-nav-link"
+    >
+        <span>◯</span>
+        <small>Profile</small>
+    </a>
+
+</nav>
+
+
+<!-- FLASH MESSAGE SCRIPT -->
+<script>
+
+    setTimeout(function () {
+
+        const messages =
+            document.querySelectorAll(".flash-message");
+
+        messages.forEach(function (message) {
+
+            message.style.opacity = "0";
+            message.style.transform = "translateY(-10px)";
+            message.style.transition =
+                "opacity 0.3s ease, transform 0.3s ease";
+
+            setTimeout(function () {
+                message.remove();
+            }, 300);
+
+        });
+
+    }, 2000);
+
+</script>
+
+
+<!-- LIKE SCRIPT -->
+<script>
+
+    document.querySelectorAll(".post-action-form")
+        .forEach(function (form) {
+
+        form.addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+            const button =
+                form.querySelector(".like-button");
+
+            const icon =
+                button.querySelector(".like-icon");
+
+            const count =
+                button.querySelector(".like-count");
+
+            if (button.disabled) {
+                return;
+            }
+
+            button.disabled = true;
+
+            try {
+
+                const response = await fetch(
+                    form.action,
+                    {
+                        method: "POST",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest"
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Like request failed");
+                }
+
+                const data = await response.json();
+
+                button.classList.toggle(
+                    "liked",
+                    data.liked
+                );
+
+                icon.textContent =
+                    data.liked ? "❤️" : "♡";
+
+                count.textContent =
+                    data.like_count;
+
+            } catch (error) {
+
+                console.error("Like error:", error);
+
+            } finally {
+
+                button.disabled = false;
+
+            }
+
+        });
+
+    });
+
+</script>
+
+
+<!-- COMMENT OPEN SCRIPT -->
+<script>
+
+    document.addEventListener("click", function (event) {
+
+        const button =
+            event.target.closest(".comment-trigger");
+
+        if (!button) {
+            return;
+        }
+
+        const postId =
+            button.dataset.postId;
+
+        const commentSection =
+            document.getElementById(
+                "comments-" + postId
+            );
+
+        if (!commentSection) {
+            return;
+        }
+
+        commentSection.classList.add("open");
+
+        commentSection.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+        const input =
+            commentSection.querySelector(
+                'input[name="content"]'
+            );
+
+        if (input) {
+
+            setTimeout(function () {
+                input.focus();
+            }, 500);
+
+        }
+
+    });
+
+</script>
+
+
+<!-- COMMENT LOADING AND SUBMISSION SCRIPT -->
+<script>
+
+    function createCommentElement(comment) {
+
+        const commentItem =
+            document.createElement("div");
+
+        commentItem.className =
+            "comment-item";
+
+
+        const author =
+            document.createElement("strong");
+
+        author.textContent =
+            comment.full_name || "Student";
+
+
+        const commentText =
+            document.createElement("div");
+
+        commentText.textContent =
+            comment.content;
+
+
+        commentItem.appendChild(author);
+        commentItem.appendChild(commentText);
+
+
+        return commentItem;
+    }
+
+
+    async function loadComments(commentSection) {
+
+        const commentsList =
+            commentSection.querySelector(".comments-list");
+
+        if (!commentsList) {
+            return;
+        }
+
+
+        const sectionId =
+            commentSection.id;
+
+        const postId =
+            sectionId.replace("comments-", "");
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/comments/" + postId
+                );
+
+
+            if (!response.ok) {
+                throw new Error(
+                    "Unable to load comments"
+                );
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+                return;
+            }
+
+
+            commentsList.innerHTML = "";
+
+
+            data.comments.forEach(function (comment) {
+
+                const commentElement =
+                    createCommentElement(comment);
+
+                commentsList.appendChild(
+                    commentElement
+                );
+
+            });
+
+
+        } catch (error) {
+
+            console.error(
+                "Error loading comments:",
+                error
+            );
+
+        }
+
+    }
+
+
+    document.querySelectorAll(".comment-section")
+        .forEach(function (commentSection) {
+
+            loadComments(commentSection);
+
+        });
+
+
+    document.querySelectorAll(".comment-form")
+        .forEach(function (form) {
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const input =
+                    form.querySelector(
+                        'input[name="content"]'
+                    );
+
+
+                const submitButton =
+                    form.querySelector("button");
+
+
+                const commentSection =
+                    form.closest(
+                        ".comment-section"
+                    );
+
+
+                const commentsList =
+                    commentSection.querySelector(
+                        ".comments-list"
+                    );
+
+
+                const feedback =
+                    commentSection.querySelector(
+                        ".comment-feedback"
+                    );
+
+
+                const content =
+                    input.value.trim();
+
+
+                if (!content) {
+                    return;
+                }
+
+
+                submitButton.disabled =
+                    true;
+
+                feedback.textContent =
+                    "";
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            form.action,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "X-Requested-With":
+                                        "XMLHttpRequest",
+
+                                    "Content-Type":
+                                        "application/x-www-form-urlencoded"
+                                },
+
+                                body:
+                                    new URLSearchParams({
+                                        content: content
+                                    })
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "Comment request failed"
+                        );
+
+                    }
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!data.success) {
+
+                        throw new Error(
+                            data.message ||
+                            "Unable to add comment"
+                        );
+
+                    }
+
+
+                    await loadComments(
+                        commentSection
+                    );
+
+
+                    input.value = "";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Comment error:",
+                        error
+                    );
+
+
+                    feedback.textContent =
+                        error.message ||
+                        "Unable to send comment. Please try again.";
+
+
+                } finally {
+
+                    submitButton.disabled =
+                        false;
+
+                }
+
+            }
+        );
+
+    });
+
+</script>
+
+
+<!-- SHARE SCRIPT -->
+<script>
+
+    document.querySelectorAll(".share-button")
+        .forEach(function (button) {
+
+        button.addEventListener(
+            "click",
+            async function () {
+
+                const postId =
+                    button.dataset.postId;
+
+
+                const postUrl =
+                    window.location.origin +
+                    "/dashboard#post-" +
+                    postId;
+
+
+                try {
+
+                    if (navigator.share) {
+
+                        await navigator.share({
+                            title: "FUTA Meet post",
+                            url: postUrl
+                        });
+
+                    } else {
+
+                        await navigator.clipboard.writeText(
+                            postUrl
+                        );
+
+
+                        alert(
+                            "Post link copied!"
+                        );
+
+                    }
+
+
+                } catch (error) {
+
+                    console.log(
+                        "Share cancelled or unavailable."
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+</script>
+```
+
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register Business - FUTA Meet</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+        .business-page {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .business-header {
+            margin-bottom: 30px;
+        }
+
+        .business-header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .business-header p {
+            color: #777;
+        }
+
+        .business-form {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #111;
+        }
+
+        .business-submit {
+            width: 100%;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            background: #111;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .business-submit:hover {
+            opacity: 0.9;
+        }
+
+        .verification-note {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f5f5f5;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .business-alert {
+            margin-bottom: 20px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .business-alert.success {
+            background: #eaf8ef;
+            color: #176b35;
+        }
+
+        .business-alert.error {
+            background: #fdecec;
+            color: #a52222;
+        }
+    </style>
+</head>
+
+<body class="futa-meet-body">
+
+<div class="website-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="brand"
+        >
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='images/futa-meet-logo.png'
+                ) }}"
+                alt="FUTA Meet"
+            >
+        </a>
+
+        <nav class="sidebar-navigation">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="sidebar-link"
+            >
+                <span>⌂</span>
+                <span>Home</span>
+            </a>
+
+            <a
+                href="{{ url_for('notifications') }}"
+                class="sidebar-link"
+            >
+                <span>♧</span>
+                <span>Notifications</span>
+            </a>
+
+            <a
+                href="{{ url_for('discover') }}"
+                class="sidebar-link"
+            >
+                <span>◉</span>
+                <span>Discover</span>
+            </a>
+
+            <a
+                href="{{ url_for('business_register') }}"
+                class="sidebar-link"
+            >
+                <span>▣</span>
+                <span>Business</span>
+            </a>
+
+            <a href="#" class="sidebar-link">
+                <span>⌂</span>
+                <span>Accommodation</span>
+            </a>
+
+            <a href="#" class="sidebar-link">
+                <span>▣</span>
+                <span>Food Delivery</span>
+            </a>
+
+            <a href="#" class="sidebar-link">
+                <span>▤</span>
+                <span>Campus Market</span>
+            </a>
+
+            <a
+                href="{{ url_for('chat') }}"
+                class="sidebar-link"
+            >
+                <span>□</span>
+                <span>Chat</span>
+            </a>
+
+            <a href="#" class="sidebar-link">
+                <span>▤</span>
+                <span>Academics</span>
+            </a>
+
+            <a
+                href="{{ url_for('profile') }}"
+                class="sidebar-link"
+            >
+                <span>◯</span>
+                <span>Profile</span>
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div class="mobile-brand">
+                FUTA Meet
+            </div>
+
+            <div class="topbar-actions">
+
+                <a
+                    href="{{ url_for('notifications') }}"
+                    class="icon-button"
+                >
+                    ♧
+                </a>
+
+                <a
+                    href="{{ url_for('chat') }}"
+                    class="icon-button"
+                >
+                    ◯
+                </a>
+
+            </div>
+
+        </header>
+
+
+        <section class="business-page">
+
+            <div class="business-header">
+
+                <h1>Register your business</h1>
+
+                <p>
+                    Create a business profile and connect with students
+                    across FUTA Meet.
+                </p>
+
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% if messages %}
+
+                    {% for category, message in messages %}
+
+                        <div class="business-alert {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
+
+            <form
+                class="business-form"
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+                <div class="form-group">
+
+                    <label for="business_name">
+                        Business name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="business_name"
+                        name="business_name"
+                        placeholder="Enter your business name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="category">
+                        Business category
+                    </label>
+
+                    <select
+                        id="category"
+                        name="category"
+                        required
+                    >
+
+                        <option value="">
+                            Select a category
+                        </option>
+
+                        {% for key, name in categories.items() %}
+
+                            <option value="{{ key }}">
+                                {{ name }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="description">
+                        Business description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        placeholder="Tell students about your business..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Business phone number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="080..."
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="location">
+                        Business location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        placeholder="e.g. FUTA South Gate"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="logo">
+                        Business logo
+                    </label>
+
+                    <input
+                        type="file"
+                        id="logo"
+                        name="logo"
+                        accept="image/*"
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="business-submit"
+                >
+                    Submit business for verification
+                </button>
+
+
+                <div class="verification-note">
+
+                    Your business will be reviewed by FUTA Meet
+                    before it becomes publicly visible.
+
+                    <br><br>
+
+                    Verification status will initially be:
+                    <strong>Pending</strong>.
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

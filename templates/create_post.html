@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Post | FUTA Meet</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="futa-meet-body create-post-page">
+
+    <div class="website-layout">
+
+        <aside class="sidebar">
+
+            <div class="sidebar-logo">
+                <img
+                    src="{{ url_for('static', filename='images/futa-meet-logo.png') }}"
+                    alt="FUTA Meet Logo">
+            </div>
+
+            <nav class="sidebar-links">
+
+                <a href="{{ url_for('dashboard') }}" class="sidebar-link">
+                    <span>⌂</span>
+                    <span>Home</span>
+                </a>
+
+                <a href="{{ url_for('discover') }}" class="sidebar-link">
+                    <span>◉</span>
+                    <span>Discover</span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <span>⌂</span>
+                    <span>Accommodation</span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <span>▤</span>
+                    <span>Food Delivery</span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <span>▤</span>
+                    <span>Campus Market</span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <span>□</span>
+                    <span>Chat</span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <span>▤</span>
+                    <span>Academics</span>
+                </a>
+
+                <a href="{{ url_for('profile') }}" class="sidebar-link">
+                    <span>◯</span>
+                    <span>Profile</span>
+                </a>
+
+            </nav>
+
+        </aside>
+
+        <main class="main-content">
+
+            <header class="topbar">
+                <div>
+                    <span class="section-label">CAMPUS COMMUNITY</span>
+                    <h2>Create Post</h2>
+                </div>
+
+                <a href="{{ url_for('dashboard') }}"
+                   class="create-back-link">
+                    Back to Home
+                </a>
+            </header>
+
+            <section class="create-intro">
+                <h1>What's happening at FUTA?</h1>
+
+                <p>
+                    Share announcements, questions, ideas, pictures,
+                    and campus updates with other students.
+                </p>
+            </section>
+
+            <section class="post-composer">
+
+                <div class="composer-user">
+                    <div class="composer-avatar">
+                        {{ user["full_name"][0] | upper }}
+                    </div>
+
+                    <div>
+                        <strong>{{ user["full_name"] }}</strong>
+                        <small>Sharing with the FUTA community</small>
+                    </div>
+                </div>
+
+                <form
+                    action="{{ url_for('create_post') }}"
+                    method="POST"
+                    enctype="multipart/form-data">
+
+                    <textarea
+                        name="content"
+                        placeholder="Share something with your campus community..."
+                        maxlength="2000"
+                        required></textarea>
+
+                    <div class="upload-options">
+
+                        <label for="media">
+                            <span>▧</span>
+                            <span>Photo or Video</span>
+                        </label>
+
+                        <input
+                            type="file"
+                            id="media"
+                            name="media"
+                            accept="image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime">
+
+                        <span class="upload-note">
+                            Images and videos
+                        </span>
+
+                    </div>
+
+                    <div class="composer-footer">
+
+                        <a href="{{ url_for('dashboard') }}"
+                           class="cancel-post">
+                            Cancel
+                        </a>
+
+                        <button type="submit"
+                                class="publish-post-button">
+                            Publish Post
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,1696 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Messages - FUTA Meet</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --blue: #315bea;
+            --blue-light: #eef3ff;
+            --text: #172b4d;
+            --muted: #8a96aa;
+            --border: #e8ecf3;
+            --bg: #f5f7fb;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        /* =====================================
+           APP
+        ===================================== */
+
+        .app {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+        }
+
+        /* =====================================
+           SIDEBAR
+        ===================================== */
+
+        .sidebar {
+            width: 172px;
+            background: #fff;
+            border-right: 1px solid var(--border);
+            padding: 25px 11px;
+            flex-shrink: 0;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 0 13px 30px;
+        }
+
+        .logo-area img {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-size: 16px;
+            font-weight: 800;
+            color: #142a50;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-link {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 0 13px;
+            border-radius: 10px;
+            color: #53627a;
+            font-size: 12px;
+            transition: .2s ease;
+        }
+
+        .nav-link:hover {
+            background: #f5f7fc;
+            color: var(--blue);
+        }
+
+        .nav-link.active {
+            background: var(--blue-light);
+            color: var(--blue);
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            width: 17px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        /* =====================================
+           MAIN
+        ===================================== */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            height: 100vh;
+            padding: 26px 26px 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-heading {
+            margin-bottom: 18px;
+        }
+
+        .page-heading h1 {
+            font-size: 25px;
+            line-height: 1;
+            margin-bottom: 7px;
+            color: #142a50;
+        }
+
+        .page-heading p {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* =====================================
+           CHAT APP
+        ===================================== */
+
+        .chat-container {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(24, 45, 80, .045);
+        }
+
+        /* =====================================
+           CHAT LIST
+        ===================================== */
+
+        .people-panel {
+            width: 350px;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-right: 1px solid var(--border);
+        }
+
+        .panel-top {
+            padding: 20px 18px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .panel-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .compose-btn {
+            width: 32px;
+            height: 32px;
+            border: 0;
+            border-radius: 9px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 39px;
+            border: 1px solid #e1e6ef;
+            background: #f7f9fc;
+            border-radius: 10px;
+            outline: none;
+            padding: 0 12px 0 37px;
+            font-size: 12px;
+            color: var(--text);
+            transition: .2s;
+        }
+
+        .search-box input:focus {
+            background: white;
+            border-color: #9bb0f5;
+            box-shadow: 0 0 0 3px rgba(49, 91, 234, .06);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 13px;
+            top: 11px;
+            color: #9aa5b7;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .people-list {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            padding: 16px 18px 8px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #a1aabb;
+        }
+
+        .person {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 17px;
+            min-height: 70px;
+            cursor: pointer;
+            border-bottom: 1px solid #f2f4f7;
+            transition: background .18s ease;
+        }
+
+        .person:hover {
+            background: #f8faff;
+        }
+
+        .person.selected {
+            background: #eef3ff;
+        }
+
+        .person.selected::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 12px;
+            bottom: 12px;
+            width: 3px;
+            border-radius: 0 4px 4px 0;
+            background: var(--blue);
+        }
+
+        /* =====================================
+           AVATAR
+        ===================================== */
+
+        .avatar-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #edf2ff;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .online-dot {
+            position: absolute;
+            right: 0;
+            bottom: 1px;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: #35c76f;
+            border: 2px solid white;
+        }
+
+        .person-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .person-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .person-name {
+            min-width: 0;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .person-time {
+            flex-shrink: 0;
+            font-size: 9px;
+            color: #a0a9b8;
+        }
+
+        .person-preview {
+            margin-top: 5px;
+            color: #8995a9;
+            font-size: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .student-details {
+            margin-top: 4px;
+            color: #8995a9;
+            font-size: 9px;
+        }
+
+        .unread-count {
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            border-radius: 20px;
+            background: var(--blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        /* =====================================
+           CONVERSATION
+        ===================================== */
+
+        .conversation {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            background:
+                radial-gradient(
+                    circle at 20% 20%,
+                    rgba(49,91,234,.025),
+                    transparent 28%
+                ),
+                #f8faff;
+        }
+
+        /* =====================================
+           CHAT HEADER
+        ===================================== */
+
+        .conversation-header {
+            height: 70px;
+            flex-shrink: 0;
+            padding: 10px 20px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .conversation-user {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 0;
+        }
+
+        .conversation-user .avatar {
+            width: 42px;
+            height: 42px;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .user-details {
+            margin-top: 4px;
+            font-size: 9px;
+            color: #929dae;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .header-btn {
+            width: 34px;
+            height: 34px;
+            border: 0;
+            background: transparent;
+            border-radius: 9px;
+            color: #7e8a9f;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .header-btn:hover {
+            background: #f3f6fb;
+            color: var(--blue);
+        }
+
+        /* =====================================
+           MESSAGES
+        ===================================== */
+
+        .messages {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 24px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .message-row {
+            display: flex;
+            width: 100%;
+        }
+
+        .message-row.sent {
+            justify-content: flex-end;
+        }
+
+        .message-row.received {
+            justify-content: flex-start;
+        }
+
+        .message-bubble {
+            max-width: min(520px, 70%);
+            padding: 10px 13px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            line-height: 1.5;
+            word-break: break-word;
+            box-shadow: 0 2px 7px rgba(25, 45, 75, .035);
+        }
+
+        .message-row.received .message-bubble {
+            background: white;
+            color: #344054;
+            border: 1px solid #e9edf3;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-row.sent .message-bubble {
+            background: var(--blue);
+            color: white;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 10px rgba(49, 91, 234, .14);
+        }
+
+        .message-time {
+            display: block;
+            margin-top: 5px;
+            font-size: 8px;
+            text-align: right;
+            opacity: .55;
+        }
+
+        /* =====================================
+           EMPTY CHAT
+        ===================================== */
+
+        .empty-chat {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .empty-content {
+            width: 330px;
+            max-width: 100%;
+        }
+
+        .empty-icon {
+            width: 66px;
+            height: 66px;
+            margin: 0 auto 17px;
+            border-radius: 50%;
+            background: #edf2ff;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 27px;
+        }
+
+        .empty-content h2 {
+            font-size: 17px;
+            margin-bottom: 7px;
+            color: var(--text);
+        }
+
+        .empty-content p {
+            font-size: 11px;
+            color: #929daf;
+            line-height: 1.6;
+        }
+
+        /* =====================================
+           MESSAGE FORM
+        ===================================== */
+
+        .message-form {
+            padding: 12px 17px;
+            background: white;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .message-form-inner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .message-input {
+            flex: 1;
+            min-width: 0;
+            height: 42px;
+            border: 1px solid #e0e5ed;
+            background: #f7f9fc;
+            border-radius: 13px;
+            padding: 0 15px;
+            outline: none;
+            font-size: 12px;
+            color: var(--text);
+        }
+
+        .message-input:focus {
+            background: white;
+            border-color: #9bb0f5;
+            box-shadow: 0 0 0 3px rgba(49, 91, 234, .05);
+        }
+
+        .send-btn {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border: none;
+            border-radius: 12px;
+            background: var(--blue);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: .2s;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(49, 91, 234, .2);
+        }
+
+        .send-btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* =====================================
+           SCROLLBAR
+        ===================================== */
+
+        .people-list::-webkit-scrollbar,
+        .messages::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .people-list::-webkit-scrollbar-thumb,
+        .messages::-webkit-scrollbar-thumb {
+            background: #dce2eb;
+            border-radius: 10px;
+        }
+
+        /* =====================================
+           MOBILE BACK BUTTON
+        ===================================== */
+
+        .mobile-back {
+            display: none;
+            width: 33px;
+            height: 33px;
+            border: 0;
+            border-radius: 9px;
+            background: #f1f4fa;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 17px;
+        }
+
+        /* =====================================
+           TABLET
+        ===================================== */
+
+        @media (max-width: 950px) {
+
+            .sidebar {
+                width: 70px;
+            }
+
+            .logo-text {
+                display: none;
+            }
+
+            .logo-area {
+                justify-content: center;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .nav-link {
+                justify-content: center;
+                padding: 0;
+            }
+
+            .nav-link span:not(.nav-icon) {
+                display: none;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .people-panel {
+                width: 310px;
+                min-width: 280px;
+            }
+        }
+
+        /* =====================================
+           MOBILE
+        ===================================== */
+
+        @media (max-width: 680px) {
+
+            body {
+                overflow: hidden;
+            }
+
+            .app {
+                height: 100vh;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                padding: 10px;
+                height: 100vh;
+            }
+
+            .page-heading {
+                padding: 4px 5px;
+                margin-bottom: 11px;
+            }
+
+            .page-heading h1 {
+                font-size: 21px;
+            }
+
+            .page-heading p {
+                font-size: 10px;
+            }
+
+            .chat-container {
+                border-radius: 13px;
+            }
+
+            .people-panel {
+                width: 100%;
+                min-width: 100%;
+                border-right: 0;
+            }
+
+            .conversation {
+                display: none;
+                width: 100%;
+            }
+
+            .chat-container.chat-open .people-panel {
+                display: none;
+            }
+
+            .chat-container.chat-open .conversation {
+                display: flex;
+            }
+
+            .mobile-back {
+                display: block;
+            }
+
+            .conversation-header {
+                padding: 10px 13px;
+            }
+
+            .messages {
+                padding: 18px 14px;
+            }
+
+            .message-bubble {
+                max-width: 82%;
+            }
+
+            .header-actions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =====================================
+         SIDEBAR
+    ====================================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo-area">
+
+            <img
+                src="{{ url_for('static', filename='images/futa-meet-logo.png') }}"
+                alt="FUTA Meet"
+            >
+
+            <div class="logo-text">
+                FUTA Meet
+            </div>
+
+        </div>
+
+        <nav class="nav">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="nav-link"
+            >
+                <span class="nav-icon">⌂</span>
+                <span>Home</span>
+            </a>
+
+            <a
+                href="{{ url_for('notifications') }}"
+                class="nav-link"
+            >
+                <span class="nav-icon">♧</span>
+                <span>Notifications</span>
+            </a>
+
+            <a
+                href="{{ url_for('discover') }}"
+                class="nav-link"
+            >
+                <span class="nav-icon">◉</span>
+                <span>Discover</span>
+            </a>
+
+            <!-- =================================
+                 BUSINESS
+            ================================== -->
+
+            <a
+                href="{{ url_for('business_my') }}"
+                class="nav-link"
+            >
+                <span class="nav-icon">▣</span>
+                <span>Business</span>
+            </a>
+
+            <a
+                href="#"
+                class="nav-link"
+            >
+                <span class="nav-icon">⌂</span>
+                <span>Accommodation</span>
+            </a>
+
+            <a
+                href="#"
+                class="nav-link"
+            >
+                <span class="nav-icon">▣</span>
+                <span>Food Delivery</span>
+            </a>
+
+            <a
+                href="#"
+                class="nav-link"
+            >
+                <span class="nav-icon">▤</span>
+                <span>Campus Market</span>
+            </a>
+
+            <a
+                href="{{ url_for('chat') }}"
+                class="nav-link active"
+            >
+                <span class="nav-icon">▭</span>
+                <span>Chat</span>
+            </a>
+
+            <a
+                href="#"
+                class="nav-link"
+            >
+                <span class="nav-icon">▤</span>
+                <span>Academics</span>
+            </a>
+
+            <a
+                href="{{ url_for('profile') }}"
+                class="nav-link"
+            >
+                <span class="nav-icon">○</span>
+                <span>Profile</span>
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- =====================================
+         MAIN
+    ====================================== -->
+
+    <main class="main">
+
+        <div class="page-heading">
+
+            <h1>Messages</h1>
+
+            <p>
+                Connect and chat with students on FUTA Meet.
+            </p>
+
+        </div>
+
+
+        <section
+            class="chat-container {% if selected_user %}chat-open{% endif %}"
+            id="chatContainer"
+        >
+
+            <!-- =================================
+                 LEFT CHAT LIST
+            ================================== -->
+
+            <aside class="people-panel">
+
+                <div class="panel-top">
+
+                    <div class="panel-title-row">
+
+                        <div class="panel-title">
+                            Messages
+                        </div>
+
+                        <button
+                            type="button"
+                            class="compose-btn"
+                            title="New message"
+                        >
+                            +
+                        </button>
+
+                    </div>
+
+
+                    <div class="search-box">
+
+                        <span class="search-icon">
+                            ⌕
+                        </span>
+
+                        <input
+                            type="text"
+                            id="studentSearch"
+                            placeholder="Search students..."
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="people-list">
+
+                    <!-- ==========================
+                         RECENT CHATS
+                    =========================== -->
+
+                    {% if conversations %}
+
+                        <div class="section-title">
+                            RECENT CHATS
+                        </div>
+
+                        {% for person in conversations %}
+
+                            <a
+                                href="{{ url_for('open_chat', user_id=person['id']) }}"
+                                class="person
+                                {% if selected_user and selected_user['id'] == person['id'] %}
+                                    selected
+                                {% endif %}"
+                            >
+
+                                <div class="avatar-wrap">
+
+                                    <div class="avatar">
+
+                                        {% if person['profile_picture'] %}
+
+                                            <img
+                                                src="{{ url_for(
+                                                    'static',
+                                                    filename='uploads/' + person['profile_picture']
+                                                ) }}"
+                                                alt=""
+                                            >
+
+                                        {% else %}
+
+                                            {{ person['full_name'][0]|upper }}
+
+                                        {% endif %}
+
+                                    </div>
+
+                                    <span class="online-dot"></span>
+
+                                </div>
+
+
+                                <div class="person-info">
+
+                                    <div class="person-top">
+
+                                        <div class="person-name">
+                                            {{ person['full_name'] }}
+                                        </div>
+
+                                        {% if person['last_message'] %}
+
+                                            <div class="person-time">
+                                                {{ person['created_at'] if person['created_at'] is defined else '' }}
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <div class="person-preview">
+                                        {{ person['last_message'] or 'Start a conversation' }}
+                                    </div>
+
+                                </div>
+
+                            </a>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+
+                    <!-- ==========================
+                         STUDENTS
+                    =========================== -->
+
+                    <div class="section-title">
+                        STUDENTS
+                    </div>
+
+
+                    {% for person in users %}
+
+                        <a
+                            href="{{ url_for('open_chat', user_id=person['id']) }}"
+                            class="person student-item
+                            {% if selected_user and selected_user['id'] == person['id'] %}
+                                selected
+                            {% endif %}"
+                        >
+
+                            <div class="avatar-wrap">
+
+                                <div class="avatar">
+
+                                    {% if person['profile_picture'] %}
+
+                                        <img
+                                            src="{{ url_for(
+                                                'static',
+                                                filename='uploads/' + person['profile_picture']
+                                            ) }}"
+                                            alt=""
+                                        >
+
+                                    {% else %}
+
+                                        {{ person['full_name'][0]|upper }}
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="person-info">
+
+                                <div class="person-top">
+
+                                    <div class="person-name">
+                                        {{ person['full_name'] }}
+                                    </div>
+
+                                </div>
+
+
+                                <div class="student-details">
+
+                                    {{ person['department'] }}
+
+                                    {% if person['level'] %}
+                                        • {{ person['level'] }}
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </a>
+
+                    {% else %}
+
+                        <div
+                            class="no-students"
+                            style="
+                                padding:35px 20px;
+                                text-align:center;
+                                color:#9aa4b5;
+                                font-size:11px;
+                            "
+                        >
+                            No students available.
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </aside>
+
+
+            <!-- =================================
+                 CONVERSATION
+            ================================== -->
+
+            <section class="conversation">
+
+                {% if selected_user %}
+
+                    <!-- ==========================
+                         HEADER
+                    =========================== -->
+
+                    <header class="conversation-header">
+
+                        <div class="conversation-user">
+
+                            <button
+                                type="button"
+                                class="mobile-back"
+                                id="mobileBack"
+                            >
+                                ‹
+                            </button>
+
+
+                            <div class="avatar-wrap">
+
+                                <div class="avatar">
+
+                                    {% if selected_user['profile_picture'] %}
+
+                                        <img
+                                            src="{{ url_for(
+                                                'static',
+                                                filename='uploads/' + selected_user['profile_picture']
+                                            ) }}"
+                                            alt=""
+                                        >
+
+                                    {% else %}
+
+                                        {{ selected_user['full_name'][0]|upper }}
+
+                                    {% endif %}
+
+                                </div>
+
+                                <span class="online-dot"></span>
+
+                            </div>
+
+
+                            <div>
+
+                                <div class="user-name">
+                                    {{ selected_user['full_name'] }}
+                                </div>
+
+                                <div class="user-details">
+
+                                    {{ selected_user['department'] }}
+
+                                    {% if selected_user['level'] %}
+                                        • {{ selected_user['level'] }}
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="header-actions">
+
+                            <button
+                                type="button"
+                                class="header-btn"
+                                title="Search conversation"
+                            >
+                                ⌕
+                            </button>
+
+                            <button
+                                type="button"
+                                class="header-btn"
+                                title="More"
+                            >
+                                ⋮
+                            </button>
+
+                        </div>
+
+                    </header>
+
+
+                    <!-- ==========================
+                         MESSAGES
+                    =========================== -->
+
+                    <div
+                        class="messages"
+                        id="messages"
+                    >
+
+                        {% if messages %}
+
+                            {% for message in messages %}
+
+                                <div
+                                    class="message-row
+                                    {% if message['sender_id'] == current_user['id'] %}
+                                        sent
+                                    {% else %}
+                                        received
+                                    {% endif %}"
+                                >
+
+                                    <div class="message-bubble">
+
+                                        {{ message['content'] }}
+
+                                        <span class="message-time">
+                                            {{ message['created_at'] }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <div class="empty-chat">
+
+                                <div class="empty-content">
+
+                                    <div class="empty-icon">
+                                        💬
+                                    </div>
+
+                                    <h2>
+                                        Start the conversation
+                                    </h2>
+
+                                    <p>
+                                        Send a message to
+                                        {{ selected_user['full_name'] }}
+                                        and start chatting.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- ==========================
+                         MESSAGE FORM
+                    =========================== -->
+
+                    <form
+                        class="message-form"
+                        id="messageForm"
+                    >
+
+                        <div class="message-form-inner">
+
+                            <input
+                                type="text"
+                                name="content"
+                                id="messageInput"
+                                class="message-input"
+                                placeholder="Write a message..."
+                                maxlength="2000"
+                                autocomplete="off"
+                            >
+
+
+                            <input
+                                type="hidden"
+                                name="receiver_id"
+                                value="{{ selected_user['id'] }}"
+                            >
+
+
+                            <button
+                                type="submit"
+                                class="send-btn"
+                                id="sendButton"
+                                title="Send message"
+                            >
+                                ➤
+                            </button>
+
+                        </div>
+
+                    </form>
+
+
+                {% else %}
+
+                    <!-- ==========================
+                         NO CHAT SELECTED
+                    =========================== -->
+
+                    <div class="empty-chat">
+
+                        <div class="empty-content">
+
+                            <div class="empty-icon">
+                                💬
+                            </div>
+
+                            <h2>
+                                Your messages
+                            </h2>
+
+                            <p>
+                                Select a student from the left
+                                to open a conversation and start messaging.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    /* =====================================
+       SEARCH
+    ===================================== */
+
+    const searchInput =
+        document.getElementById("studentSearch");
+
+    if (searchInput) {
+
+        searchInput.addEventListener(
+            "input",
+            function () {
+
+                const value =
+                    this.value.toLowerCase().trim();
+
+                const students =
+                    document.querySelectorAll(
+                        ".student-item"
+                    );
+
+                students.forEach(function (student) {
+
+                    const name =
+                        student
+                        .querySelector(".person-name")
+                        ?.textContent
+                        .toLowerCase() || "";
+
+                    const details =
+                        student
+                        .querySelector(".student-details")
+                        ?.textContent
+                        .toLowerCase() || "";
+
+                    if (
+                        name.includes(value) ||
+                        details.includes(value)
+                    ) {
+
+                        student.style.display = "flex";
+
+                    } else {
+
+                        student.style.display = "none";
+
+                    }
+
+                });
+
+            }
+        );
+
+    }
+
+
+    /* =====================================
+       SCROLL TO BOTTOM
+    ===================================== */
+
+    const messagesBox =
+        document.getElementById("messages");
+
+    if (messagesBox) {
+
+        messagesBox.scrollTop =
+            messagesBox.scrollHeight;
+
+    }
+
+
+    /* =====================================
+       SEND MESSAGE
+    ===================================== */
+
+    const messageForm =
+        document.getElementById("messageForm");
+
+    if (messageForm) {
+
+        messageForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+                const input =
+                    document.getElementById(
+                        "messageInput"
+                    );
+
+                const button =
+                    document.getElementById(
+                        "sendButton"
+                    );
+
+                const content =
+                    input.value.trim();
+
+                if (!content) {
+                    return;
+                }
+
+                button.disabled = true;
+
+                const formData =
+                    new FormData(messageForm);
+
+                try {
+
+                    const response =
+                        await fetch(
+                            "{{ url_for('send_message') }}",
+                            {
+                                method: "POST",
+                                body: formData,
+                                headers: {
+                                    "X-Requested-With":
+                                        "XMLHttpRequest"
+                                }
+                            }
+                        );
+
+                    const data =
+                        await response.json();
+
+                    if (!data.success) {
+
+                        alert(
+                            data.message ||
+                            "Could not send message."
+                        );
+
+                        return;
+                    }
+
+
+                    const message =
+                        data.message;
+
+
+                    /* ==========================
+                       MESSAGE ROW
+                    =========================== */
+
+                    const row =
+                        document.createElement("div");
+
+                    row.className =
+                        "message-row sent";
+
+
+                    /* ==========================
+                       MESSAGE BUBBLE
+                    =========================== */
+
+                    const bubble =
+                        document.createElement("div");
+
+                    bubble.className =
+                        "message-bubble";
+
+
+                    const text =
+                        document.createTextNode(
+                            message.content
+                        );
+
+                    bubble.appendChild(text);
+
+
+                    /* ==========================
+                       TIME
+                    =========================== */
+
+                    const time =
+                        document.createElement("span");
+
+                    time.className =
+                        "message-time";
+
+                    time.textContent =
+                        message.created_at;
+
+                    bubble.appendChild(time);
+
+                    row.appendChild(bubble);
+
+
+                    /* ==========================
+                       REMOVE EMPTY STATE
+                    =========================== */
+
+                    const emptyState =
+                        messagesBox.querySelector(
+                            ".empty-chat"
+                        );
+
+                    if (emptyState) {
+                        emptyState.remove();
+                    }
+
+
+                    /* ==========================
+                       ADD MESSAGE
+                    =========================== */
+
+                    messagesBox.appendChild(row);
+
+
+                    /* ==========================
+                       CLEAR INPUT
+                    =========================== */
+
+                    input.value = "";
+
+
+                    /* ==========================
+                       SCROLL
+                    =========================== */
+
+                    messagesBox.scrollTop =
+                        messagesBox.scrollHeight;
+
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    alert(
+                        "Something went wrong while sending the message."
+                    );
+
+                } finally {
+
+                    button.disabled = false;
+
+                    input.focus();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =====================================
+       ENTER TO SEND
+    ===================================== */
+
+    const messageInput =
+        document.getElementById("messageInput");
+
+    if (messageInput) {
+
+        messageInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Enter" &&
+                    !event.shiftKey
+                ) {
+
+                    event.preventDefault();
+
+                    if (messageForm) {
+
+                        messageForm.requestSubmit();
+
+                    }
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =====================================
+       MOBILE BACK
+    ===================================== */
+
+    const mobileBack =
+        document.getElementById("mobileBack");
+
+    const chatContainer =
+        document.getElementById("chatContainer");
+
+    if (mobileBack && chatContainer) {
+
+        mobileBack.addEventListener(
+            "click",
+            function () {
+
+                chatContainer.classList.remove(
+                    "chat-open"
+                );
+
+                window.location.href =
+                    "{{ url_for('chat') }}";
+
+            }
+        );
+
+    }
+
+</script>
+
+</body>
+</html>
+```
+
+The important addition is the **Business** link:
+
+```html
+<a href="{{ url_for('business_my') }}" class="nav-link">
+    <span class="nav-icon">▣</span>
+    <span>Business</span>
+</a>
+```
+
+So now on this Chat page the sidebar is **Home → Notifications → Discover → Business → Accommodation → Food Delivery → Campus Market → Chat → Academics → Profile**.
+
+Next, we should do the same thing to the **other full pages**, so Business genuinely appears everywhere instead of us manually fixing one page at a time.
